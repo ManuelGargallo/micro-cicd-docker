@@ -1,0 +1,26 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "micro-cicd-docker"
+version = "0.1.0"
+authors = [
+  { name="ManuelGargallo"},
+]
+description = "A lightweight local-first CI/CD and Docker state reconciliation engine."
+readme = "README.md"
+requires-python = ">=3.11"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Topic :: Software Development :: Build Tools",
+]
+dependencies = [
+    "docker>=7.1.0",
+]
+
+[project.urls]
+"Homepage" = "https://github.com/ManuelGargallo/micro-cicd-docker"
+"Bug Tracker" = "https://github.com/ManuelGargallo/micro-cicd-docker/issues"
