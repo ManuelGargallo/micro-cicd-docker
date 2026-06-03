@@ -11,5 +11,10 @@ ENV/
 # Project State
 .build_memo.json
 
+# Build and Distribution
+build/
+dist/
+*.egg-info/
+
 # Docker
 .docker/

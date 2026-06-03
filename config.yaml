@@ -1,0 +1,19 @@
+# Global Configuration for Micro-CICD-Docker
+
+# Project metadata
+project:
+  repo_name: "local-python-logger"
+  tracked_files:
+    - "deploy/Dockerfile"
+    - "src/app.py"
+
+# Deployment settings
+deployment:
+  node_name: "local-node-01"
+  mem_limit: "512m"
+  cpu_limit: 0.5
+
+# Runtime settings
+runtime:
+  scan_interval: 5  # Seconds between checks in watch mode
+  state_file: ".build_memo.json"

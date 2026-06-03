@@ -12,6 +12,7 @@ import sys
 import time
 from typing import List
 import docker
+import yaml
 
 logging.basicConfig(
     level=logging.INFO,
@@ -20,10 +21,19 @@ logging.basicConfig(
 )
 logger = logging.getLogger("SmartBuilder")
 
-REPO_NAME = "local-python-logger"
-STATE_MEMO_FILE = ".build_memo.json"
-TRACKED_FILES = ["deploy/Dockerfile", "src/app.py"]
-INTERVAL = 5  # Scan filesystem every 5 seconds in watch mode
+# Load configuration
+CONFIG_PATH = os.path.join(os.path.dirname(__file__), "..", "config.yaml")
+try:
+    with open(CONFIG_PATH, "r") as f:
+        config = yaml.safe_load(f)
+except Exception as e:
+    logger.critical(f"Failed to load config.yaml: {e}")
+    sys.exit(1)
+
+REPO_NAME = config["project"]["repo_name"]
+TRACKED_FILES = config["project"]["tracked_files"]
+INTERVAL = config["runtime"]["scan_interval"]
+STATE_MEMO_FILE = config["runtime"]["state_file"]
 
 
 def get_project_fingerprint(files: List[str]) -> str:
@@ -91,6 +101,7 @@ def run_build_cycle(client: docker.DockerClient) -> None:
     target_tag = f"{REPO_NAME}:{next_version}"
     
     project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+    # In a more robust version, the Dockerfile path would also come from config
     dockerfile_path = os.path.join(project_root, "deploy/Dockerfile")
     
     try:

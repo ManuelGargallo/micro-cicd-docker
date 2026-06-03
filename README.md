@@ -31,7 +31,6 @@ This project follows **GitOps** principles. The `ci_engine` acts as the build pi
 
 ## Roadmap
 Future enhancements planned for this prototype:
-- **External Configuration:** Move hardcoded paths and image names to a dedicated `config.yaml` or environment variables.
 - **Event-Driven Execution:** Replace interval polling with filesystem events (`watchdog`) and Docker event streams for near-instant reactivity.
 - **Zero-Downtime Reconcile:** Implement a "start-then-stop" rolling update strategy to eliminate downtime during container promotion.
 - **Automated Testing:** Integrate a test suite using `pytest` and `testcontainers` to verify the build and deployment logic.

@@ -5,11 +5,13 @@ Supports one-shot execution or active runtime checking via the --watch flag.
 """
 
 import logging
+import os
 import sys
 import time
 from typing import Optional
 import docker
 from docker.models.containers import Container
+import yaml
 
 logging.basicConfig(
     level=logging.INFO,
@@ -18,9 +20,20 @@ logging.basicConfig(
 )
 logger = logging.getLogger("Orchestrator")
 
-REPO_NAME = "local-python-logger"
-NODE_NAME = "local-node-01"
-INTERVAL = 5  # Reconcile container state every 5 seconds in watch mode
+# Load configuration
+CONFIG_PATH = os.path.join(os.path.dirname(__file__), "..", "config.yaml")
+try:
+    with open(CONFIG_PATH, "r") as f:
+        config = yaml.safe_load(f)
+except Exception as e:
+    logger.critical(f"Failed to load config.yaml: {e}")
+    sys.exit(1)
+
+REPO_NAME = config["project"]["repo_name"]
+NODE_NAME = config["deployment"]["node_name"]
+INTERVAL = config["runtime"]["scan_interval"]
+MEM_LIMIT = config["deployment"]["mem_limit"]
+CPU_LIMIT = int(config["deployment"]["cpu_limit"] * 1e9)  # Convert to nano_cpus
 
 
 def find_highest_local_version(client: docker.DockerClient, repo: str) -> str:
@@ -74,8 +87,8 @@ def deploy_new_version(client: docker.DockerClient, repo: str, target_version: s
         image=full_image_string,
         name=name,
         detach=True,
-        mem_limit=512*1024*1024,
-        nano_cpus=500000000
+        mem_limit=MEM_LIMIT,
+        nano_cpus=CPU_LIMIT
     )
     logger.info(f"  [Success] Node {name} promoted to version [{target_version}].")
 
