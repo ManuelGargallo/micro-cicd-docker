@@ -28,3 +28,10 @@ A lightweight, local-first CI/CD prototype
 
 ## Architecture
 This project follows **GitOps** principles. The `ci_engine` acts as the build pipeline (Continuous Integration), while the `cd_controller` acts as the agent ensuring the "actual state" (running container) matches the "desired state" (latest local image), achieving **Continuous Deployment**.
+
+## Roadmap
+Future enhancements planned for this prototype:
+- **External Configuration:** Move hardcoded paths and image names to a dedicated `config.yaml` or environment variables.
+- **Event-Driven Execution:** Replace interval polling with filesystem events (`watchdog`) and Docker event streams for near-instant reactivity.
+- **Zero-Downtime Reconcile:** Implement a "start-then-stop" rolling update strategy to eliminate downtime during container promotion.
+- **Automated Testing:** Integrate a test suite using `pytest` and `testcontainers` to verify the build and deployment logic.
